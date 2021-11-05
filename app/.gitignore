@@ -1,0 +1,3 @@
+/build
+#APIキーなどが含まれる google-services.json はGitHubに公開すべきではないので、バージョン管理下から外すために、ここに追記した
+google-services.json

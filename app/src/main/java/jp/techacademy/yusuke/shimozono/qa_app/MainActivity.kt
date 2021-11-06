@@ -28,10 +28,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     // お気に入り一覧の課題対応のための変数 TODO 後でメンテナンスする
-    private lateinit var mFavoriteArrayList: ArrayList<Favorite>
-    private var mFavoriteRef: DatabaseReference? = null
-    private var mFavoriteQuestionRef: DatabaseReference? = null
-    private var favoriteState: Boolean = false
+//    private lateinit var mFavoriteArrayList: ArrayList<Favorite>
+//    private var mFavoriteRef: DatabaseReference? = null
+//    private var mFavoriteQuestionRef: DatabaseReference? = null
+//    private var favoriteState: Boolean = false
 
 
     private val mEventListener = object : ChildEventListener {
@@ -119,74 +119,74 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
 
-    // TODO 課題用の追記　これやっぱいらない？？
-    // 「お気に入り一覧」のドロワーをタップした時の動作用のfavoriteListenerを作成しておく
-    private val favoriteListener = object : ChildEventListener {
-        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-            val map = dataSnapshot.value as Map<String, String>
-            val uid = map["uid"] ?: ""
-            val questionUid = dataSnapshot.key as String
-            val genre = map["genre"].toString()
-            val favoriteQuestion = Favorite(genre, uid, questionUid)
-            mFavoriteArrayList.add(favoriteQuestion)
-        }
+//    // TODO 課題用の追記　これやっぱいらない？？
+//    // 「お気に入り一覧」のドロワーをタップした時の動作用のfavoriteListenerを作成しておく
+//    private val favoriteListener = object : ChildEventListener {
+//        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
+//            val map = dataSnapshot.value as Map<String, String>
+//            val uid = map["uid"] ?: ""
+//            val questionUid = dataSnapshot.key as String
+//            val genre = map["genre"].toString()
+////            val favoriteQuestion = Favorite(genre, uid, questionUid)
+////            mFavoriteArrayList.add(favoriteQuestion)
+//        }
+//
+//        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
+//        }
+//
+//        override fun onChildRemoved(p0: DataSnapshot) {
+//        }
+//
+//        override fun onChildMoved(p0: DataSnapshot, p1: String?) {
+//        }
+//
+//        override fun onCancelled(P0: DatabaseError) {
+//        }
+//    }
 
-        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
-        }
-
-        override fun onChildRemoved(p0: DataSnapshot) {
-        }
-
-        override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-        }
-
-        override fun onCancelled(P0: DatabaseError) {
-        }
-    }
-
-    // TODO 課題用の追記
-    // お気に入り質問を取得するリスナー
-    private val favoriteQuestionListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-            // mEventListener の onChildAdded()の中身をコピペして、微修正。
-            val map = dataSnapshot.value as Map<String, String>
-            val title = map["title"] ?: ""
-            val body = map["body"] ?: ""
-            val name = map["name"] ?: ""
-            val uid = map["uid"] ?: ""
-            val imageString = map["image"] ?: ""
-            val bytes =
-                if (imageString.isNotEmpty()) {
-                    Base64.decode(imageString, Base64.DEFAULT)
-                } else {
-                    byteArrayOf()
-                }
-
-            val answerArrayList = ArrayList<Answer>()
-            val answerMap = map["answers"] as Map<String, String>?
-
-            if (answerMap != null) {
-                for (key in answerMap.keys) {
-                    val temp = answerMap[key] as Map<String, String>
-                    val answerBody = temp["body"] ?: ""
-                    val answerName = temp["name"] ?: ""
-                    val answerUid = temp["uid"] ?: ""
-                    val answer = Answer(answerBody, answerName, answerUid, key)
-                    answerArrayList.add(answer)
-                }
-            }
-
-            val favoriteQuestion = Question(
-                title, body, name, uid, dataSnapshot.key ?: "",
-                mGenre, bytes, answerArrayList)
-            mQuestionArrayList.add(favoriteQuestion)
-            mAdapter.notifyDataSetChanged()
-        }
-
-        override fun onCancelled(P0: DatabaseError) {
-        }
-    }
+//    // TODO 課題用の追記
+//    // お気に入り質問を取得するリスナー
+//    private val favoriteQuestionListener = object : ValueEventListener {
+//        override fun onDataChange(dataSnapshot: DataSnapshot) {
+//
+//            // mEventListener の onChildAdded()の中身をコピペして、微修正。
+//            val map = dataSnapshot.value as Map<String, String>
+//            val title = map["title"] ?: ""
+//            val body = map["body"] ?: ""
+//            val name = map["name"] ?: ""
+//            val uid = map["uid"] ?: ""
+//            val imageString = map["image"] ?: ""
+//            val bytes =
+//                if (imageString.isNotEmpty()) {
+//                    Base64.decode(imageString, Base64.DEFAULT)
+//                } else {
+//                    byteArrayOf()
+//                }
+//
+//            val answerArrayList = ArrayList<Answer>()
+//            val answerMap = map["answers"] as Map<String, String>?
+//
+//            if (answerMap != null) {
+//                for (key in answerMap.keys) {
+//                    val temp = answerMap[key] as Map<String, String>
+//                    val answerBody = temp["body"] ?: ""
+//                    val answerName = temp["name"] ?: ""
+//                    val answerUid = temp["uid"] ?: ""
+//                    val answer = Answer(answerBody, answerName, answerUid, key)
+//                    answerArrayList.add(answer)
+//                }
+//            }
+//
+//            val favoriteQuestion = Question(
+//                title, body, name, uid, dataSnapshot.key ?: "",
+//                mGenre, bytes, answerArrayList)
+//            mQuestionArrayList.add(favoriteQuestion)
+//            mAdapter.notifyDataSetChanged()
+//        }
+//
+//        override fun onCancelled(P0: DatabaseError) {
+//        }
+//    }
 
 
 
@@ -259,7 +259,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // ListViewの準備
         mAdapter = QuestionsListAdapter(this)
         mQuestionArrayList = ArrayList<Question>()
-        mFavoriteArrayList = ArrayList<Favorite>() // TODO 課題用の追記
+//        mFavoriteArrayList = ArrayList<Favorite>() // TODO 課題用の追記
 
         mAdapter.notifyDataSetChanged()
 
@@ -323,87 +323,33 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             toolbar.title = getString(R.string.menu_computer_label)
             mGenre = 4
         } else if (id == R.id.nav_favoriteList) { // お気に入り一覧 TODO 課題用の追記
-            toolbar.title = getString(R.string.menu_favorite)
-            mGenre = 5
 
-
-        }
-
-            drawer_layout.closeDrawer(GravityCompat.START)
-
-        if (mGenre != 5) { // mGenreが1-4 or null の時。
-
-            // 質問のリストをクリアしてから再度Adapterにセットし、AdapterをListViewにセットし直す
-            mQuestionArrayList.clear()
-            mAdapter.setQuestionArrayList(mQuestionArrayList)
-            listView.adapter = mAdapter
-
-            // 選択したジャンルにリスナーを登録する
-            if (mGenreRef != null) {
-                mGenreRef!!.removeEventListener(mEventListener)
-            }
-            mGenreRef = mDatabaseReference.child(ContentsPATH).child(mGenre.toString())
-            mGenreRef!!.addChildEventListener(mEventListener)
-            Log.d("test99", "通常 mQuestionArrayList : $mQuestionArrayList") // null
-            Log.d("test99", "通常 mGenreRef : $mGenreRef") // ok,クリックしたジャンルを参照している
-            Log.d("test99", "通常 mEventListener : $mEventListener") //okかな？
-
-
-        } else { // mGenreが5のとき。(お気に入り一覧をタップしたとき)
-
-            mQuestionArrayList.clear()
-            mAdapter.setQuestionArrayList(mQuestionArrayList)
-            listView.adapter = mAdapter
-
-            for (data in mFavoriteArrayList) {
-                mFavoriteQuestionRef = mDatabaseReference.child(ContentsPATH).child(data.genre).child(data.questionUid) // TODO 修正中
-                mFavoriteQuestionRef!!.addValueEventListener(favoriteQuestionListener)
-            }
-
-
-            Log.d("test99", "mQuestionArrayList : $mQuestionArrayList") // null→これはOK
-            Log.d("test99", "mAdapter : $mAdapter") // OK
-            Log.d("test99", "mFavoriteArrayList : $mFavoriteArrayList") // null→多分ここが犯人 TODO
-            Log.d("test99", "mFavoriteQuestionRef : $mFavoriteQuestionRef") // null→mFavoriteArrayListがnullだから当たり前かも
-            Log.d("test99", "favoriteQuestionListener : $favoriteQuestionListener") // ?一応okか？→当たり前か・・
-
-
-
+            val intent = Intent(applicationContext, FavoriteActivity::class.java)
+            startActivity(intent)
 
         }
+
+        drawer_layout.closeDrawer(GravityCompat.START)
+
+        // 質問のリストをクリアしてから再度Adapterにセットし、AdapterをListViewにセットし直す
+        mQuestionArrayList.clear()
+        mAdapter.setQuestionArrayList(mQuestionArrayList)
+        listView.adapter = mAdapter
+
+        // 選択したジャンルにリスナーを登録する
+        if (mGenreRef != null) {
+            mGenreRef!!.removeEventListener(mEventListener)
+        }
+        mGenreRef = mDatabaseReference.child(ContentsPATH).child(mGenre.toString())
+        mGenreRef!!.addChildEventListener(mEventListener)
+
         return true
 
-
-
-
-
-
-
-
-        // TODO ↓オリジナルコード。後で消す
-        ///////////////////////////////////////////////////////
-//        drawer_layout.closeDrawer(GravityCompat.START)
-//
-//        // 質問のリストをクリアしてから再度Adapterにセットし、AdapterをListViewにセットし直す
-//        mQuestionArrayList.clear()
-//        mAdapter.setQuestionArrayList(mQuestionArrayList)
-//        listView.adapter = mAdapter
-//
-//        // 選択したジャンルにリスナーを登録する
-//        if (mGenreRef != null) {
-//            mGenreRef!!.removeEventListener(mEventListener)
-//        }
-//        mGenreRef = mDatabaseReference.child(ContentsPATH).child(mGenre.toString())
-//        mGenreRef!!.addChildEventListener(mEventListener)
-//
-//        return true
-        ///////////////////////////////////////////////////////
-
-
-
-
-
     }
+
+
+
+
 
 
 
@@ -413,11 +359,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         loginCheckAndFavoriteAppearance()
     }
 
-    // TODO ↓onResumeがあればこれはいらないかも・・・
-    override fun onRestart() {
-        super.onRestart()
-        loginCheckAndFavoriteAppearance()
-    }
 
 
 

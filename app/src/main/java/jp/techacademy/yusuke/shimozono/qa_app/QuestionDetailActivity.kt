@@ -14,18 +14,8 @@ class QuestionDetailActivity : AppCompatActivity() {
     private lateinit var mQuestion: Question
     private lateinit var mAdapter: QuestionDetailListAdapter
     private lateinit var mAnswerRef: DatabaseReference
-
-
-
-
-
-
-    // TODO 課題用の追記
     private var favoriteState: Boolean = false // お気に入り状態を示す
     private var loginState: Boolean = false // ログイン状態を表す
-
-
-
 
     private val mEventListener = object : ChildEventListener {
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
@@ -39,11 +29,9 @@ class QuestionDetailActivity : AppCompatActivity() {
                     return
                 }
             }
-
             val body = map["body"] as? String ?: ""
             val name = map["name"] as? String ?: ""
             val uid = map["uid"] as? String ?: ""
-
             val answer = Answer(body, name, uid, answerUid)
             mQuestion.answers.add(answer)
             mAdapter.notifyDataSetChanged()
@@ -77,18 +65,8 @@ class QuestionDetailActivity : AppCompatActivity() {
         listView.adapter = mAdapter
         mAdapter.notifyDataSetChanged()
 
-
-        // ログイン状態の確認・更新＋お気に入りボタンの更新 TODO 課題用の追記
+        // ログイン状態の確認・更新＋お気に入りボタンの更新
         loginRefresh()
-
-
-
-
-
-
-
-
-
 
         fab.setOnClickListener {
             // ログイン済みのユーザーを取得する
@@ -114,7 +92,7 @@ class QuestionDetailActivity : AppCompatActivity() {
         mAnswerRef.addChildEventListener(mEventListener)
 
 
-        // お気に入りボタンを押した時の動作 TODO ここから課題用の追記
+        // お気に入りボタンを押した時の動作
         btnFav.setOnClickListener {
             val databaseReference = FirebaseDatabase.getInstance().reference
             // ユーザーIDとお気に入り登録状態を示すデータを格納するFirebaseのファイルパス(のようなもの)
@@ -131,10 +109,8 @@ class QuestionDetailActivity : AppCompatActivity() {
                     val data = snapshot.value as Map<*, *>?
                     if (data == null) {
                         val data = HashMap<String, String>()
-                        data["genre"] = mQuestion.genre.toString() // TODO お気に入り一覧の機能追加のためにここ追加。後で消すかも
+                        data["genre"] = mQuestion.genre.toString()
 
-
-//                        data["favorite_state"] = mQuestion.favorites.toString() // TODO 思ったけど、このデータいらないかも？？？
                         favoriteRef.setValue(data)
                     } else {
                         favoriteRef.removeValue()
@@ -148,7 +124,7 @@ class QuestionDetailActivity : AppCompatActivity() {
     }
 
 
-    // お気に入り登録状態に合わせて、お気に入りボタンの外観を変更するメソッド TODO 課題用の追記
+    // お気に入り登録状態に合わせて、お気に入りボタンの外観を変更するメソッド
     private fun btnAppearanceRefresh() {
         if (favoriteState) {
             btnFav.setBackgroundColor(getColor(R.color.btnColor_FavYes)) // ボタンの色を変更
@@ -161,7 +137,7 @@ class QuestionDetailActivity : AppCompatActivity() {
         }
     }
 
-    // お気に入り状態を検索し、favStateSearchResultにその結果を代入する TODO 課題用の追記
+    // お気に入り状態を検索し、favStateSearchResultにその結果を代入する
     private fun favStateSearch() {
         val databaseReference = FirebaseDatabase.getInstance().reference
         // ユーザーIDとお気に入り登録状態を示すデータを格納するFirebaseのファイルパス(のようなもの)
@@ -206,14 +182,11 @@ class QuestionDetailActivity : AppCompatActivity() {
         }
     }
 
-
     // 別画面から戻ってきた時にloginRefresh()を実行する
     override fun onResume() {
         super.onResume()
-        Log.d("test99", "onResume_3")
         loginRefresh()
     }
-
 }
 
 

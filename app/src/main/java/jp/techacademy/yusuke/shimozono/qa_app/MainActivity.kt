@@ -26,14 +26,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var mAdapter: QuestionsListAdapter
     private var mGenreRef: DatabaseReference? = null
 
-
-    // お気に入り一覧の課題対応のための変数 TODO 後でメンテナンスする
-//    private lateinit var mFavoriteArrayList: ArrayList<Favorite>
-//    private var mFavoriteRef: DatabaseReference? = null
-//    private var mFavoriteQuestionRef: DatabaseReference? = null
-//    private var favoriteState: Boolean = false
-
-
     private val mEventListener = object : ChildEventListener {
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
@@ -64,23 +56,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
 
-
-            // TODO favorite対応で修正中
             val question = Question(
                 body, title, name, uid, dataSnapshot.key ?: "",
-                mGenre, bytes, answerArrayList, /*favoriteArrayList*/
-            )
+                mGenre, bytes, answerArrayList)
             mQuestionArrayList.add(question)
             mAdapter.notifyDataSetChanged()
-
-
-
-            // TODO オリジナルコード。一旦コメントアウトで保存しておく
-//            val question = Question(title, body, name, uid, dataSnapshot.key ?: "",
-//                mGenre, bytes, answerArrayList)
-//            mQuestionArrayList.add(question)
-//            mAdapter.notifyDataSetChanged()
-
         }
 
         override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
@@ -102,7 +82,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             question.answers.add(answer)
                         }
                     }
-
                     mAdapter.notifyDataSetChanged()
                 }
             }
@@ -117,85 +96,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         override fun onCancelled(P0: DatabaseError) {
         }
     }
-
-
-//    // TODO 課題用の追記　これやっぱいらない？？
-//    // 「お気に入り一覧」のドロワーをタップした時の動作用のfavoriteListenerを作成しておく
-//    private val favoriteListener = object : ChildEventListener {
-//        override fun onChildAdded(dataSnapshot: DataSnapshot, s: String?) {
-//            val map = dataSnapshot.value as Map<String, String>
-//            val uid = map["uid"] ?: ""
-//            val questionUid = dataSnapshot.key as String
-//            val genre = map["genre"].toString()
-////            val favoriteQuestion = Favorite(genre, uid, questionUid)
-////            mFavoriteArrayList.add(favoriteQuestion)
-//        }
-//
-//        override fun onChildChanged(dataSnapshot: DataSnapshot, s: String?) {
-//        }
-//
-//        override fun onChildRemoved(p0: DataSnapshot) {
-//        }
-//
-//        override fun onChildMoved(p0: DataSnapshot, p1: String?) {
-//        }
-//
-//        override fun onCancelled(P0: DatabaseError) {
-//        }
-//    }
-
-//    // TODO 課題用の追記
-//    // お気に入り質問を取得するリスナー
-//    private val favoriteQuestionListener = object : ValueEventListener {
-//        override fun onDataChange(dataSnapshot: DataSnapshot) {
-//
-//            // mEventListener の onChildAdded()の中身をコピペして、微修正。
-//            val map = dataSnapshot.value as Map<String, String>
-//            val title = map["title"] ?: ""
-//            val body = map["body"] ?: ""
-//            val name = map["name"] ?: ""
-//            val uid = map["uid"] ?: ""
-//            val imageString = map["image"] ?: ""
-//            val bytes =
-//                if (imageString.isNotEmpty()) {
-//                    Base64.decode(imageString, Base64.DEFAULT)
-//                } else {
-//                    byteArrayOf()
-//                }
-//
-//            val answerArrayList = ArrayList<Answer>()
-//            val answerMap = map["answers"] as Map<String, String>?
-//
-//            if (answerMap != null) {
-//                for (key in answerMap.keys) {
-//                    val temp = answerMap[key] as Map<String, String>
-//                    val answerBody = temp["body"] ?: ""
-//                    val answerName = temp["name"] ?: ""
-//                    val answerUid = temp["uid"] ?: ""
-//                    val answer = Answer(answerBody, answerName, answerUid, key)
-//                    answerArrayList.add(answer)
-//                }
-//            }
-//
-//            val favoriteQuestion = Question(
-//                title, body, name, uid, dataSnapshot.key ?: "",
-//                mGenre, bytes, answerArrayList)
-//            mQuestionArrayList.add(favoriteQuestion)
-//            mAdapter.notifyDataSetChanged()
-//        }
-//
-//        override fun onCancelled(P0: DatabaseError) {
-//        }
-//    }
-
-
-
-
-
-
-
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -237,30 +137,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Firebase
         mDatabaseReference = FirebaseDatabase.getInstance().reference
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // ListViewの準備
         mAdapter = QuestionsListAdapter(this)
         mQuestionArrayList = ArrayList<Question>()
-//        mFavoriteArrayList = ArrayList<Favorite>() // TODO 課題用の追記
-
         mAdapter.notifyDataSetChanged()
 
         listView.setOnItemClickListener { parent, view, position, id ->
@@ -270,15 +149,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
         }
 
-
-
-
-
-
-        // ログインチェック TODO　課題用の追記
+        // onCreate時に、ログイン状態を確認して、お気に入り一覧のドロワー表示有無を変更する
         loginCheckAndFavoriteAppearance()
-
-
     }
 
     override fun onResume() {
@@ -287,6 +159,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (mGenre == 0) {
             onNavigationItemSelected(nav_view.menu.getItem(0))
         }
+        loginCheckAndFavoriteAppearance()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -303,7 +176,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
             return true
         }
-
         return  super.onOptionsItemSelected(item)
     }
 
@@ -322,11 +194,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         } else if (id == R.id.nav_computer) {
             toolbar.title = getString(R.string.menu_computer_label)
             mGenre = 4
-        } else if (id == R.id.nav_favoriteList) { // お気に入り一覧 TODO 課題用の追記
-
+        } else if (id == R.id.nav_favoriteList) { // お気に入り一覧をタップした場合
+            // お気に入り一覧の画面を起動する
             val intent = Intent(applicationContext, FavoriteActivity::class.java)
             startActivity(intent)
-
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
@@ -344,34 +215,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         mGenreRef!!.addChildEventListener(mEventListener)
 
         return true
-
     }
 
-
-
-
-
-
-
-    // TODO 課題用の追記
+    // 別画面から戻ってきた時に、loginCheckAndFavoriteAppearance()を実行する
     override fun onResumeFragments() {
         super.onResumeFragments()
         loginCheckAndFavoriteAppearance()
     }
 
-
-
-
-
-
-    // ログインしている場合はお気に入り一覧をメニューに表示する TODO 課題用の追記
+    // ログイン状態を確認して、お気に入り一覧のドロワー表示有無を変更する
     private fun loginCheckAndFavoriteAppearance() {
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
             findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.nav_favoriteList).setVisible(true)
         } else {
+            findViewById<NavigationView>(R.id.nav_view).menu.findItem(R.id.nav_favoriteList).setVisible(false)
         }
     }
-
-
 }

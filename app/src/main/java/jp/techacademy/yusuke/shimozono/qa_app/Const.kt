@@ -12,6 +12,5 @@ const val AnswersPATH = "answers"
 // Preferenceに表示名を保存する時のキー
 const val NameKEY = "name"
 
-// TODO 課題用の追記
-// Firebaseにお気に入り登録状態を保存するパス
+// Firebaseにお気に入り登録情報を保存するパス
 const val FavoritePATH = "favorites"

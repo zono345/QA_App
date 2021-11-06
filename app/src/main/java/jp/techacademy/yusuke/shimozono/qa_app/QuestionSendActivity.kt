@@ -115,8 +115,8 @@ class QuestionSendActivity : AppCompatActivity(), View.OnClickListener, Database
             val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             im.hideSoftInputFromWindow(v.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS)
 
-            val dataBaseReference = FirebaseDatabase.getInstance().reference // TODO 追記 Firebaseのデータベースのreferenceを取得する
-            val genreRef = dataBaseReference.child(ContentsPATH).child(mGenre.toString()) //TODO ジャンル？
+            val dataBaseReference = FirebaseDatabase.getInstance().reference // Firebaseのデータベースのreferenceを取得する
+            val genreRef = dataBaseReference.child(ContentsPATH).child(mGenre.toString())
 
             val data = HashMap<String, String>()
 
@@ -165,13 +165,14 @@ class QuestionSendActivity : AppCompatActivity(), View.OnClickListener, Database
         }
     }
 
-    // TODO エラーが出る。 super.onRequestPermissionsResult(requestCode, permissions, grantResults)を追記すべきかも？
+    // テキスト通りに記述するとエラーが出るので修正。
+    // super.onRequestPermissionsResult(requestCode, permissions, grantResults)が抜けてたので追記した。
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)  // TODO この行はテキスト記載なし。エラー解消のため追記
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)  // エラー解消のため追記
         when (requestCode) {
             PERMISSION_REQUEST_CODE -> {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

@@ -12,12 +12,6 @@ class Question (
     val genre: Int, // 質問のジャンル
     bytes: ByteArray,
     val answers: ArrayList<Answer>, // Firebaseから取得した質問のモデルクラスであるAnswerのArrayList
-
-
-    // TODO 課題用の追記  いらなさそうなので、一旦コメントアウト
-//    val favorites: ArrayList<Favorite>, // お気に入り登録状態
-
-
     ): Serializable {
         val imageBytes: ByteArray // Firebaseから取得した画像をbyte型の配列にしたもの
 
@@ -25,4 +19,3 @@ class Question (
             imageBytes = bytes.clone()
         }
     }
-

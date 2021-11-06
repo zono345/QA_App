@@ -14,7 +14,7 @@ buildscript {
     }
 }
 
-// Firebase接続用。 TODO テキストに記載あったけど、エラー出るので、一旦コメントアウトした。後で消すかも？
+// ↓以下のallprojects{}はテキストに記載あるが、最新のAndroidStudioでは不要であり、逆に記載するとエラーが出るので消去しました
 //allprojects {
 //    repositories {
 //        google()
